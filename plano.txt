@@ -1,0 +1,57 @@
+Primeira coisa que deve aparecer:
+1. string "Bem vindo, deseja jogar primeiro? (S/N)"
+1.1 se jogarPrimeiro == S: primeira jogada do player
+1.2 se jogarPrimeiro == N: primeira jogada da IA
+1.3 se jogarPrimeiro != S, N: string "porfavor responder com 'S' ou com 'N' "
+
+ESTRUTURA DO JOGO:
+ A B C D E F G
+6 . . . . . .
+5 . . . . . .
+4 . . . . . .
+3 . . . . . .
+2 . . . . . .
+1 . . . . . .
+
+ESTRUTURA DE REPETIÇÃO CENTRAL: enquanto o jogo não terminar (vitória ou empate), o programa deve:
+
+1. exibir o tabuleiro atualizado;
+
+2. verificar de quem é a vez de jogar (player ou IA);
+
+3. se for o player:
+    3.1 mostrar a string "Escolha sua jogada: ";
+    3.2 receber a entrada (A, B, C, D, E, F ou G);
+    3.3 validar se a jogada é uma dessas opções;
+     – se não for, mostrar a string "por favor responder com: A, B, C, D, E, F ou G" e pedir novamente;
+    3.4 converter a letra escolhida em índice da coluna (A = 0, B = 1, …, G = 6);
+    3.5 verificar se existe espaço disponível na coluna escolhida;
+     – se a coluna estiver cheia, string "coluna cheia! escolha outra coluna." e pedir novamente;
+    3.6 posicionar a peça do player (X) no ponto mais baixo disponível da coluna.
+
+4. se for a IA:
+    4.1 escolher uma jogada válida (pode ser aleatória ou baseada em alguma lógica de vitória);
+    4.2 posicionar a peça da IA (O) na coluna escolhida;
+    4.3 exibir string "IA jogou na coluna [letraEscolhida]".
+
+5. após qualquer jogada (player ou IA), verificar se há vitória:
+    5.1 verificar 4 peças iguais (X ou O) em sequência na horizontal, vertical ou diagonal;
+    5.2 se houver, exibir o tabuleiro final e:
+     – se o player venceu, mostrar "Parabéns, você venceu!";
+     – se a IA venceu, mostrar "A IA venceu!";
+     – encerrar o jogo.
+
+6. se não houver vitória, verificar se todas as colunas estão cheias (empate):
+    6.1 se o tabuleiro estiver completo, exibir o tabuleiro e string "Empate!";
+    6.2 encerrar o jogo.
+
+7. se o jogo não terminou (sem vitória e sem empate):
+    7.1 alternar o turno: se jogador jogou, próxima vez é da IA; se IA jogou, próxima vez é do jogador;
+    7.2 retornar ao início da estrutura de repetição central (imprimir o tabuleiro e continuar o ciclo).
+
+finalmente, ao término da partida (vitória ou empate):
+
+1. mostrar mensagem "Fim de jogo.";
+2. opcionalmente, perguntar "Deseja jogar novamente? (S/N)";
+3. se resposta == S, reiniciar tabuleiro e repetir toda a lógica;
+4. se resposta == N, encerrar o programa com string "Obrigado por jogar!".
