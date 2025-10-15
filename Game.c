@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include "game.h"
 
-static int char_to_col_index(char col_char) 
+static int char_to_col_index(char col_char) {
     return toupper(col_char) - 'A';
 }
 
@@ -61,13 +61,13 @@ int drop_piece(char board[BOARD_ROWS][BOARD_COLS], int col, char piece) {
     return -1;
 }
 
-int get_player_move(char board[BOARD_ROWS][BOARD_COLS]) {
+int get_human_move(char board[BOARD_ROWS][BOARD_COLS], char current_piece) {
     char col_char;
     int col_index = -1;
     int valid_input = 0;
 
     while (!valid_input) {
-        printf("Escolha sua jogada (A-G): ");
+        printf("Jogador %c, escolha sua jogada (A-G): ", current_piece);
         if (scanf(" %c", &col_char) != 1) {
             printf("Entrada inválida. Por favor, digite uma letra entre A e G.\n");
             while (getchar() != '\n');
@@ -145,48 +145,89 @@ void run_game() {
 
     do {
         initialize_board(board);
-        int current_player_is_human = -1;
+        char current_turn_piece;
         int game_over = 0;
-        char first_player_choice;
+        char first_player_choice_char;
+        GameMode game_mode;
 
-        while (current_player_is_human == -1) {
-            printf("Bem vindo, deseja jogar primeiro? (S/N): ");
-            if (scanf(" %c", &first_player_choice) != 1) {
+        char mode_choice_char;
+        while (1) {
+            printf("Escolha o modo de jogo:\n");
+            printf("1 - Jogador vs Jogador\n");
+            printf("2 - Jogador vs IA\n");
+            printf("Sua escolha: ");
+            if (scanf(" %c", &mode_choice_char) != 1) {
+                printf("Entrada inválida. Por favor, digite '1' ou '2'.\n");
+                while (getchar() != '\n');
+                continue;
+            }
+            if (mode_choice_char == '1') {
+                game_mode = MODE_PVP;
+                break;
+            } else if (mode_choice_char == '2') {
+                game_mode = MODE_PVIA;
+                break;
+            } else {
+                printf("Opção inválida. Por favor, digite '1' ou '2'.\n");
+            }
+            while (getchar() != '\n');
+        }
+        while (getchar() != '\n');
+
+        while (1) {
+            printf("Deseja que o Jogador X jogue primeiro? (S/N): ");
+            if (scanf(" %c", &first_player_choice_char) != 1) {
                 printf("Entrada inválida. Por favor, responda com 'S' ou 'N'.\n");
                 while (getchar() != '\n');
                 continue;
             }
-            first_player_choice = toupper(first_player_choice);
+            first_player_choice_char = toupper(first_player_choice_char);
 
-            if (first_player_choice == 'S') {
-                current_player_is_human = 1;
-            } else if (first_player_choice == 'N') {
-                current_player_is_human = 0;
+            if (first_player_choice_char == 'S') {
+                current_turn_piece = PLAYER1_PIECE;
+                break;
+            } else if (first_player_choice_char == 'N') {
+                current_turn_piece = PLAYER2_PIECE;
+                break;
             } else {
                 printf("Por favor, responder com 'S' ou com 'N'.\n");
             }
             while (getchar() != '\n');
         }
+        while (getchar() != '\n');
 
         while (!game_over) {
             display_board(board);
 
-            if (current_player_is_human) {
-                int col = get_player_move(board);
-                drop_piece(board, col, PLAYER_PIECE);
-                if (check_win(board, PLAYER_PIECE)) {
-                    display_board(board);
-                    printf("Parabéns, você venceu!\n");
-                    game_over = 1;
-                }
+            int col = -1;
+            char winning_piece = EMPTY_CELL;
+
+            if (current_turn_piece == PLAYER1_PIECE) {
+                col = get_human_move(board, PLAYER1_PIECE);
+                drop_piece(board, col, PLAYER1_PIECE);
+                winning_piece = PLAYER1_PIECE;
             } else {
-                int col = get_ia_move(board);
-                drop_piece(board, col, IA_PIECE);
-                if (check_win(board, IA_PIECE)) {
-                    display_board(board);
-                    printf("A IA venceu!\n");
-                    game_over = 1;
+                if (game_mode == MODE_PVP) {
+                    col = get_human_move(board, PLAYER2_PIECE);
+                    drop_piece(board, col, PLAYER2_PIECE);
+                    winning_piece = PLAYER2_PIECE;
+                } else {
+                    col = get_ia_move(board);
+                    drop_piece(board, col, PLAYER2_PIECE);
+                    winning_piece = PLAYER2_PIECE;
                 }
+            }
+
+            if (check_win(board, winning_piece)) {
+                display_board(board);
+                if (winning_piece == PLAYER1_PIECE) {
+                    printf("Parabéns, Jogador X venceu!\n");
+                } else if (winning_piece == PLAYER2_PIECE && game_mode == MODE_PVP) {
+                    printf("Parabéns, Jogador O venceu!\n");
+                } else {
+                    printf("A IA venceu!\n");
+                }
+                game_over = 1;
             }
 
             if (!game_over && check_draw(board)) {
@@ -196,7 +237,7 @@ void run_game() {
             }
 
             if (!game_over) {
-                current_player_is_human = !current_player_is_human;
+                current_turn_piece = (current_turn_piece == PLAYER1_PIECE) ? PLAYER2_PIECE : PLAYER1_PIECE;
             }
         }
 
@@ -210,5 +251,4 @@ void run_game() {
 
     } while (play_again_char == 'S');
 
-    printf("Obrigado por jogar!\n");
-}
+    printf("
