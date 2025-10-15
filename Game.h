@@ -1,4 +1,4 @@
-#ifndef GAME_H
+#ifndef GAME_H 
 #define GAME_H
 
 #define BOARD_ROWS 6
@@ -7,6 +7,11 @@
 #define EMPTY_CELL    '.'
 #define PLAYER1_PIECE 'X'
 #define PLAYER2_PIECE 'O'
+
+
+#define CELULA_VAZIA   EMPTY_CELL
+#define PECA_JOGADOR1  PLAYER1_PIECE
+#define PECA_JOGADOR2  PLAYER2_PIECE
 
 typedef enum {
     MODE_PVP,
@@ -23,3 +28,4 @@ int check_draw(char board[BOARD_ROWS][BOARD_COLS]);
 void run_game();
 
 #endif
+

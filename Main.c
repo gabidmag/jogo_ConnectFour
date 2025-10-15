@@ -4,6 +4,8 @@
 #include "utils.h"
 #include "Game.h"
 
+
+
 void menu(void) {
     clear_screen();
     print_divider('=', 30);
