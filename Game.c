@@ -251,4 +251,3 @@ void run_game() {
 
     } while (play_again_char == 'S');
 
-    printf("
