@@ -1,28 +1,24 @@
+# Compilador e flags
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 -g
 
-OBJS = main.o utils.o Game.o AI.o
-
+# Nome do executável
 TARGET = connect4
 
-all: $(TARGET)
+# Arquivos fonte (adicione só os que fazem parte do jogo)
+SRC = Main.c Game.c utils.c AI.c
+OBJ = $(SRC:.c=.o)
 
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
+# Regra padrão (gera o executável)
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ)
 
-main.o: main.c utils.h Game.h AI.h
-	$(CC) $(CFLAGS) -c main.c
+# Regras para gerar .o (compilação individual)
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-utils.o: utils.c utils.h
-	$(CC) $(CFLAGS) -c utils.c
-
-Game.o: Game.c Game.h
-	$(CC) $(CFLAGS) -c Game.c
-
-AI.o: AI.c AI.h Game.h
-	$(CC) $(CFLAGS) -c AI.c
-
+# Limpar arquivos compilados
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJ) $(TARGET)
 
 .PHONY: all clean
