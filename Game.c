@@ -241,7 +241,6 @@ void run_game() {
             }
         }
 
-        printf("Fim de jogo.\n");
         printf("Deseja jogar novamente? (S/N): ");
         if (scanf(" %c", &play_again_char) != 1) {
             play_again_char = 'N';
@@ -250,4 +249,6 @@ void run_game() {
         play_again_char = toupper(play_again_char);
 
     } while (play_again_char == 'S');
+
+}
 
